@@ -10,10 +10,13 @@ use Athwari\LaravelZktecoAdms\LaravelZktecoAdmsServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Testing\TestResponse;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
+    protected static ?TestResponse $latestResponse = null;
+
     protected function setUp(): void
     {
         parent::setUp();
