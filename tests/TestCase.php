@@ -21,7 +21,14 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__.'/../../laravel-zkteco-adms/database/migrations');
+        $corePackageMigrationsPath = __DIR__.'/../../laravel-zkteco-adms/database/migrations';
+
+        // In standalone package CI, the core package exists under vendor instead of as a sibling directory.
+        if (! is_dir($corePackageMigrationsPath)) {
+            $corePackageMigrationsPath = __DIR__.'/../vendor/athwari/laravel-zkteco-adms/database/migrations';
+        }
+
+        $this->loadMigrationsFrom($corePackageMigrationsPath);
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         Schema::create('teams', function (Blueprint $table): void {
