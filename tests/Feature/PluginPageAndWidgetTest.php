@@ -60,6 +60,7 @@ it('binds pages to the expected resources and actions', function () {
         ->and($listDevicePage->actions()[0])->toBeInstanceOf(CreateAction::class)
         ->and($listDevicePage->exposedHeaderWidgets())->toBe([ZktecoDeviceStats::class])
         ->and($viewDevicePage->actions()[0])->toBeInstanceOf(EditAction::class)
+        ->and($viewDevicePage->headerActions()[1])->toBeInstanceOf(DeleteAction::class)
         ->and($editDevicePage->headerActions()[0])->toBeInstanceOf(DeleteAction::class)
         ->and($listUserPage->actions()[0])->toBeInstanceOf(CreateAction::class)
         ->and($listUserPage->exposedHeaderWidgets())->toBe([ZktecoUserStats::class])
@@ -208,6 +209,11 @@ class ViewZktecoDeviceProxy extends ViewZktecoDevice
     public function actions(): array
     {
         return $this->getActions();
+    }
+
+    public function headerActions(): array
+    {
+        return $this->getHeaderActions();
     }
 }
 
