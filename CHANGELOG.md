@@ -12,6 +12,7 @@ All notable changes to `filament-zkteco-adms` will be documented in this file.
 * Generate the tenant migration timestamp when it is published.
 * Support `.php.stub` migrations from both ZKTeco packages in the test bootstrap.
 * Add a configurable, searchable device timezone selector with PHP runtime timezone fallback.
+* Require `athwari/laravel-zkteco-adms` v1.0.1 or newer for normalized timestamps and migration stubs.
 
 ## v1.0.0 - 2026-06-21
 
