@@ -10,6 +10,7 @@ use Athwari\FilamentZktecoAdms\Tests\Fixtures\Models\TestTeam;
 use Athwari\FilamentZktecoAdms\Tests\Fixtures\Models\TestUser;
 use Athwari\FilamentZktecoAdms\Traits\BelongsToTenant;
 use Athwari\LaravelZktecoAdms\Enums\CommandStatus;
+use Athwari\LaravelZktecoAdms\Enums\DeviceStatus;
 use Athwari\LaravelZktecoAdms\Models\ZktecoAttendanceLog;
 use Athwari\LaravelZktecoAdms\Models\ZktecoDeviceCommand;
 use Filament\FilamentManager;
@@ -300,6 +301,25 @@ it('returns unscoped attendance log and command queries when tenancy is enabled 
 
     expect(ZktecoDeviceCommandResource::getEloquentQuery()->pluck('id')->sort()->values()->all())
         ->toBe([$commandOne->id, $commandTwo->id]);
+});
+
+it('allows recreating soft deleted devices with the same unique identifier', function () {
+    $deviceSerialNumber = 'REUSE-DEVICE-001';
+    $device = ZktecoDevice::query()->create([
+        'serial_number' => $deviceSerialNumber,
+        'status' => DeviceStatus::Online,
+    ]);
+
+    $device->delete();
+
+    $replacementDevice = ZktecoDevice::query()->create([
+        'serial_number' => $deviceSerialNumber,
+        'status' => DeviceStatus::Offline,
+    ]);
+
+    expect($replacementDevice->id)->not->toBe($device->id)
+        ->and(ZktecoDevice::withTrashed()->whereKey($device->id)->value('serial_number'))->not->toBe($deviceSerialNumber)
+        ->and(ZktecoDevice::query()->where('serial_number', $deviceSerialNumber)->count())->toBe(1);
 });
 
 it('resolves tenant relation dynamically from plugin configuration', function () {

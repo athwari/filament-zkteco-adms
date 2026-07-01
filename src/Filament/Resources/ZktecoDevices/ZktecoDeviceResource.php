@@ -18,7 +18,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 /**
  * @extends resource<ZktecoDevice>
@@ -88,8 +87,7 @@ class ZktecoDeviceResource extends Resource
     /** @return Builder<ZktecoDevice> */
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([SoftDeletingScope::class]);
+        return parent::getEloquentQuery();
     }
 
     public static function isScopedToTenant(): bool

@@ -30,7 +30,11 @@ class ZktecoAttendanceLogForm
                         ->required()
                         ->maxLength(255),
 
+                    DateTimePicker::make('occurred_at')
+                        ->label('Occurred At'),
+
                     DateTimePicker::make('recorded_at')
+                        ->label('Device-local Time')
                         ->required(),
 
                     Select::make('status')

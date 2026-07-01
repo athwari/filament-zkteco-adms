@@ -98,7 +98,8 @@ it('computes page table widget stats from their queries', function () {
     ZktecoAttendanceLog::query()->create([
         'device_id' => $deviceOne->id,
         'pin' => '1001',
-        'recorded_at' => now(),
+        'recorded_at' => now()->subDay(),
+        'occurred_at' => now(),
         'status' => AttendanceStatus::CheckIn,
         'verify_mode' => 1,
         'work_code' => '',
@@ -107,7 +108,8 @@ it('computes page table widget stats from their queries', function () {
     ZktecoAttendanceLog::query()->create([
         'device_id' => $deviceTwo->id,
         'pin' => '1002',
-        'recorded_at' => now(),
+        'recorded_at' => now()->subDay(),
+        'occurred_at' => now(),
         'status' => AttendanceStatus::CheckOut,
         'verify_mode' => 1,
         'work_code' => '',

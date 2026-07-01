@@ -24,7 +24,17 @@ class FilamentZktecoAdmsServiceProvider extends PackageServiceProvider
     {
         parent::packageBooted();
 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        if ($this->app->runningInConsole()) {
+            $migration = 'add_tenant_columns_to_zkteco_tables.php';
+            // The core package reserves the current timestamp plus five seconds for its six migrations.
+            $timestamp = time() + 6;
+
+            $this->publishes([
+                __DIR__.'/../database/migrations/'.$migration.'.stub' => database_path(
+                    'migrations/'.date('Y_m_d_His', $timestamp).'_'.str_replace('.php', '', $migration).'.php'
+                ),
+            ], 'filament-zkteco-adms-migrations');
+        }
 
         config()->set('zkteco-adms.models.device', ZktecoDevice::class);
         config()->set('zkteco-adms.models.user', ZktecoUser::class);

@@ -70,10 +70,10 @@ it('configures each resource table with expected columns and sort order', functi
     expect(ZktecoUsersTable::configure($usersTable))->toBe($usersTable);
 
     $attendanceLogsTable = Mockery::mock(Table::class);
-    $attendanceLogsTable->shouldReceive('columns')->once()->withArgs(fn (array $columns): bool => $expectColumns($columns, 7))->andReturnSelf();
+    $attendanceLogsTable->shouldReceive('columns')->once()->withArgs(fn (array $columns): bool => $expectColumns($columns, 8))->andReturnSelf();
     $attendanceLogsTable->shouldReceive('filters')->once()->withArgs(fn (array $filters): bool => count($filters) === 4)->andReturnSelf();
     $attendanceLogsTable->shouldReceive('recordActions')->once()->withArgs(fn (array $actions): bool => count($actions) === 1)->andReturnSelf();
-    $attendanceLogsTable->shouldReceive('defaultSort')->once()->with('recorded_at', 'desc')->andReturnSelf();
+    $attendanceLogsTable->shouldReceive('defaultSort')->once()->with('occurred_at', 'desc')->andReturnSelf();
 
     expect(ZktecoAttendanceLogsTable::configure($attendanceLogsTable))->toBe($attendanceLogsTable);
 
@@ -91,8 +91,8 @@ it('configures relation manager tables for devices and users', function () {
     $newRelationManager = (fn (string $class): RelationManager => (new ReflectionClass($class))->newInstanceWithoutConstructor());
 
     $deviceAttendanceTable = Mockery::mock(Table::class);
-    $deviceAttendanceTable->shouldReceive('columns')->once()->withArgs(fn (array $columns): bool => count($columns) === 5)->andReturnSelf();
-    $deviceAttendanceTable->shouldReceive('defaultSort')->once()->with('recorded_at', 'desc')->andReturnSelf();
+    $deviceAttendanceTable->shouldReceive('columns')->once()->withArgs(fn (array $columns): bool => count($columns) === 6)->andReturnSelf();
+    $deviceAttendanceTable->shouldReceive('defaultSort')->once()->with('occurred_at', 'desc')->andReturnSelf();
 
     expect($newRelationManager(DeviceAttendanceLogsRelationManager::class)->table($deviceAttendanceTable))->toBe($deviceAttendanceTable);
 
@@ -105,9 +105,9 @@ it('configures relation manager tables for devices and users', function () {
     expect($newRelationManager(DeviceCommandsRelationManager::class)->table($deviceCommandsTable))->toBe($deviceCommandsTable);
 
     $userAttendanceTable = Mockery::mock(Table::class);
-    $userAttendanceTable->shouldReceive('columns')->once()->withArgs(fn (array $columns): bool => count($columns) === 4)->andReturnSelf();
+    $userAttendanceTable->shouldReceive('columns')->once()->withArgs(fn (array $columns): bool => count($columns) === 5)->andReturnSelf();
     $userAttendanceTable->shouldReceive('filters')->once()->withArgs(fn (array $filters): bool => count($filters) === 3)->andReturnSelf();
-    $userAttendanceTable->shouldReceive('defaultSort')->once()->with('recorded_at', 'desc')->andReturnSelf();
+    $userAttendanceTable->shouldReceive('defaultSort')->once()->with('occurred_at', 'desc')->andReturnSelf();
 
     expect($newRelationManager(UserAttendanceLogsRelationManager::class)->table($userAttendanceTable))->toBe($userAttendanceTable);
 });

@@ -3,6 +3,18 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | Device Timezones
+    |--------------------------------------------------------------------------
+    |
+    | Restrict the timezones available in the device form. Use an indexed list
+    | to display identifiers as-is, or an associative array for custom labels.
+    | Leave this empty to use every timezone supported by the PHP runtime.
+    |
+    */
+    'timezone_options' => [],
+
+    /*
+    |--------------------------------------------------------------------------
     | Multi-Tenancy
     |--------------------------------------------------------------------------
     |

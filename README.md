@@ -11,7 +11,7 @@ It is built on top of athwari/laravel-zkteco-adms (core backend logic) and adds:
 
 - Filament resources, pages, and widgets
 - Tenant-aware model behavior for devices and users
-- Tenant column migration ownership for zkteco devices and users tables
+- Publishable tenant column migration for zkteco devices and users tables
 - Tenant-scoped resource queries for attendance logs and device commands
 
 ## Features
@@ -20,7 +20,8 @@ It is built on top of athwari/laravel-zkteco-adms (core backend logic) and adds:
 - Dashboard and stats widgets
 - Plugin-owned multi-tenancy settings via filament-zkteco-adms.multi_tenancy
 - Plugin model overrides for zkteco-adms.models.device and zkteco-adms.models.user
-- Automatic migration loading for tenant columns on zkteco devices and users tables
+- Normalized attendance reporting using `occurred_at`, while retaining the device-local `recorded_at`
+- Publishable tenant migration with a generated timestamp
 
 ## Installation
 
@@ -54,6 +55,7 @@ php artisan vendor:publish --tag="filament-zkteco-adms-config"
 
 Main config keys in config/filament-zkteco-adms.php:
 
+- timezone_options
 - multi_tenancy.enabled
 - multi_tenancy.tenant_model
 - multi_tenancy.tenant_column
@@ -61,7 +63,34 @@ Main config keys in config/filament-zkteco-adms.php:
 - filament.navigation_group
 - filament.navigation_sort
 
-Migrations are loaded automatically by the plugin service provider.
+Publish the core and plugin migrations, then run them:
+
+```bash
+php artisan vendor:publish --tag="zkteco-adms-migrations"
+php artisan vendor:publish --tag="filament-zkteco-adms-migrations"
+php artisan migrate
+```
+
+Migration timestamps are generated when the files are published. Publish the core migrations first so the ZKTeco tables exist before the plugin adds tenant columns.
+
+### Device Timezones
+
+The device form uses a searchable timezone selector. By default, an empty `timezone_options` configuration exposes every timezone supported by the PHP runtime, including legacy aliases:
+
+```php
+'timezone_options' => [],
+```
+
+Use an indexed list to restrict the selector while displaying the timezone identifiers unchanged, or an associative array to provide custom labels:
+
+```php
+'timezone_options' => [
+    'UTC',
+    'Asia/Aden' => 'Yemen',
+],
+```
+
+Invalid identifiers are ignored. If no configured identifier is valid, the selector falls back to the complete PHP runtime list. New devices default to `zkteco-adms.default_timezone` when available, then `UTC`, then the first configured option.
 
 ## Usage
 
@@ -73,6 +102,8 @@ After registration, resources and pages are discovered automatically. By default
 - zkteco/device-commands
 
 The final URL depends on your panel path prefix.
+
+Attendance reports, date filters, sorting, and dashboard statistics use the normalized `occurred_at` timestamp. The original `recorded_at` value remains visible as the device-local timestamp for backward compatibility.
 
 ### Tenancy Ownership
 

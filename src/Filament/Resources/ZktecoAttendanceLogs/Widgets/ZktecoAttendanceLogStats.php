@@ -24,7 +24,7 @@ class ZktecoAttendanceLogStats extends BaseWidget
         $query = $this->getPageTableQuery();
 
         $totalLogs = $query->count();
-        $punchesToday = (clone $query)->whereDate('recorded_at', today())->count();
+        $punchesToday = (clone $query)->whereDate('occurred_at', today())->count();
         $checkIns = (clone $query)->where('status', AttendanceStatus::CheckIn)->count();
         $checkOuts = (clone $query)->where('status', AttendanceStatus::CheckOut)->count();
 

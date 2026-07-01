@@ -33,7 +33,7 @@ class ZktecoOverviewStats extends StatsOverviewWidget
 
         $totalDevices = $deviceQuery->count();
         $onlineDevices = (clone $deviceQuery)->where('status', DeviceStatus::Online)->count();
-        $todayAttendance = $attendanceQuery->whereDate('recorded_at', today())->count();
+        $todayAttendance = $attendanceQuery->whereDate('occurred_at', today())->count();
         $pendingCommands = $commandQuery->where('status', CommandStatus::Pending)->count();
 
         return [

@@ -24,12 +24,26 @@ class TestCase extends BaseTestCase
         $corePackageMigrationsPath = __DIR__.'/../../laravel-zkteco-adms/database/migrations';
 
         // In standalone package CI, the core package exists under vendor instead of as a sibling directory.
-        if (! is_dir($corePackageMigrationsPath)) {
+        if (glob($corePackageMigrationsPath.'/*.php.stub') === []) {
             $corePackageMigrationsPath = __DIR__.'/../vendor/athwari/laravel-zkteco-adms/database/migrations';
         }
 
-        $this->loadMigrationsFrom($corePackageMigrationsPath);
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $coreMigrations = [
+            'create_zkteco_devices_table.php.stub',
+            'create_zkteco_users_table.php.stub',
+            'create_zkteco_attendance_logs_table.php.stub',
+            'create_zkteco_device_commands_table.php.stub',
+            'create_zkteco_device_events_table.php.stub',
+            'add_occurred_at_to_zkteco_attendance_logs_table.php.stub',
+        ];
+
+        foreach ($coreMigrations as $migration) {
+            (require $corePackageMigrationsPath.'/'.$migration)->up();
+        }
+
+        foreach (glob(__DIR__.'/../database/migrations/*.php.stub') ?: [] as $migration) {
+            (require $migration)->up();
+        }
 
         Schema::create('teams', function (Blueprint $table): void {
             $table->id();

@@ -129,7 +129,7 @@ it('exposes resource labels and delegates form and table configuration', functio
     expect(ZktecoUserResource::table($userTable))->toBe($userTable);
 });
 
-it('includes soft deleted devices in the device resource query', function () {
+it('excludes soft deleted devices from the device resource query', function () {
     fakeUiFilamentWithoutTenant();
 
     $device = ZktecoDevice::query()->create([
@@ -140,7 +140,7 @@ it('includes soft deleted devices in the device resource query', function () {
     $device->delete();
 
     expect(ZktecoDeviceResource::getEloquentQuery()->pluck('id')->all())
-        ->toContain($device->id);
+        ->not->toContain($device->id);
 });
 
 it('exposes widget page bindings and overview stats counts', function () {
@@ -157,7 +157,8 @@ it('exposes widget page bindings and overview stats counts', function () {
     ZktecoAttendanceLog::query()->create([
         'device_id' => $deviceTwo->id,
         'pin' => '1001',
-        'recorded_at' => now(),
+        'recorded_at' => now()->subDay(),
+        'occurred_at' => now(),
         'status' => 0,
         'verify_mode' => 1,
         'work_code' => '',
@@ -205,7 +206,8 @@ it('filters overview stats by the active tenant when tenancy is enabled', functi
     ZktecoAttendanceLog::query()->create([
         'device_id' => $deviceA->id,
         'pin' => '1001',
-        'recorded_at' => now(),
+        'recorded_at' => now()->subDay(),
+        'occurred_at' => now(),
         'status' => 0,
         'verify_mode' => 1,
         'work_code' => '',
@@ -214,7 +216,8 @@ it('filters overview stats by the active tenant when tenancy is enabled', functi
     ZktecoAttendanceLog::query()->create([
         'device_id' => $deviceB->id,
         'pin' => '1002',
-        'recorded_at' => now(),
+        'recorded_at' => now()->subDay(),
+        'occurred_at' => now(),
         'status' => 0,
         'verify_mode' => 1,
         'work_code' => '',

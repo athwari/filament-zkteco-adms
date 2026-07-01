@@ -31,9 +31,14 @@ class ZktecoAttendanceLogsTable
                     ->label('User')
                     ->placeholder('—'),
 
-                TextColumn::make('recorded_at')
+                TextColumn::make('occurred_at')
+                    ->label('Occurred At')
                     ->dateTime()
                     ->sortable(),
+
+                TextColumn::make('recorded_at')
+                    ->label('Device-local Time')
+                    ->dateTime(),
 
                 TextColumn::make('status')
                     ->badge()
@@ -56,20 +61,20 @@ class ZktecoAttendanceLogsTable
                 SelectFilter::make('user')
                     ->relationship('zktecoUser', 'pin'),
 
-                Filter::make('recorded_at')
+                Filter::make('occurred_at')
                     ->schema([
                         DatePicker::make('from'),
                         DatePicker::make('until'),
                     ])
                     ->query(fn (Builder $query, array $data): Builder => $query
-                        ->when($data['from'], fn (Builder $q, $date) => $q->whereDate('recorded_at', '>=', $date))
-                        ->when($data['until'], fn (Builder $q, $date) => $q->whereDate('recorded_at', '<=', $date))),
+                        ->when($data['from'], fn (Builder $q, $date) => $q->whereDate('occurred_at', '>=', $date))
+                        ->when($data['until'], fn (Builder $q, $date) => $q->whereDate('occurred_at', '<=', $date))),
             ])
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),
                 ]),
             ])
-            ->defaultSort('recorded_at', 'desc');
+            ->defaultSort('occurred_at', 'desc');
     }
 }

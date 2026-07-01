@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Athwari\FilamentZktecoAdms\Filament\Resources\ZktecoDevices\Schemas;
 
 use Athwari\FilamentZktecoAdms\Models\ZktecoDevice;
+use Athwari\FilamentZktecoAdms\Support\TimezoneOptions;
 use Athwari\LaravelZktecoAdms\Enums\DeviceStatus;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -51,9 +52,18 @@ class ZktecoDeviceForm
                     TextInput::make('language')
                         ->maxLength(255),
 
-                    TextInput::make('timezone')
-                        ->maxLength(64),
+                    self::timezoneSelect(),
                 ]),
         ]);
+    }
+
+    private static function timezoneSelect(): Select
+    {
+        return Select::make('timezone')
+            ->options(TimezoneOptions::configured())
+            ->default(TimezoneOptions::default())
+            ->searchable()
+            ->preload()
+            ->required();
     }
 }

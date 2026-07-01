@@ -24,9 +24,14 @@ class AttendanceLogsRelationManager extends RelationManager
                     ->label('User')
                     ->placeholder('—'),
 
-                TextColumn::make('recorded_at')
+                TextColumn::make('occurred_at')
+                    ->label('Occurred At')
                     ->dateTime()
                     ->sortable(),
+
+                TextColumn::make('recorded_at')
+                    ->label('Device-local Time')
+                    ->dateTime(),
 
                 TextColumn::make('status')
                     ->badge()
@@ -36,6 +41,6 @@ class AttendanceLogsRelationManager extends RelationManager
                     ->badge()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('recorded_at', 'desc');
+            ->defaultSort('occurred_at', 'desc');
     }
 }
